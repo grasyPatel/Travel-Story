@@ -1,0 +1,15 @@
+# Node modules (Handled inside backend & frontend too, but double-check)
+node_modules/
+.env
+*.log
+
+# OS / Editor files
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Miscellaneous
+dist/
+build/
+coverage/
