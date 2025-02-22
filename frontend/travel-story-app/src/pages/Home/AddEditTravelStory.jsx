@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
+import axiosInstance from '../../utils/axiosinstance';
 import DateSelector from "../../components/Input/DateSelector";
 import ImageSelector from '../../components/Input/imageSelector';
+import uploadImage from '../../utils/uploadImage';
 import TagInput from '../../components/Input/TagInput';
 import {MdAdd , MdDeleteOutline, MdUpdate, MdClose} from "react-icons/md";
+import { toast } from 'react-toastify';
+import moment from 'moment';
 
 const AddEditTravelStory = ({
     storyInfo, 
@@ -16,10 +20,65 @@ const AddEditTravelStory = ({
     const [visitedLocation, setVisitedLocation]=useState([]);
 
     const [visitedDate, setVisitedDate]=useState(null);
+    const [error, setError]=useState("");
 
-    const HandleAddOrUpdateClick=()=>{
-        console.log("input data:",{title,storyImg,story,visitedLocation,visitedDate})
+//add new Stroy
+    const addNewTravelStory=async()=>{
+        try{
+            let imageUrl="";
+            if(storyImg){
+                const imgUploadRes=await uploadImage(storyImg)
+                imageUrl=imgUploadRes.imageUrl || "";
+            }
+            const response=await axiosInstance.post("/add-travel-story",{
+                title,
+                story,
+                imageUrl: imageUrl || "",
+                visitedLocation,
+                visitedDate: visitedDate? moment(visitedDate).valueOf():moment().valueOf(),
+
+
+            });
+
+            if(response.data && response.data.story){
+                toast.success("Story Added Successfully.")
+                getAllTravelStories();
+                onClose();
+            }
+        }catch(error){
+
+        }
+
     };
+
+//update Story
+    const updateTravelStory= async()=>{};
+
+//Handle Click for add and update
+    const HandleAddOrUpdateClick=()=>{
+      
+
+        console.log("input data:",{title,storyImg,story,visitedLocation,visitedDate});
+        if(!title){
+            setError("Please enter the title.");
+            return;
+        }
+
+        if(!story){
+            setError("Please Enter the Story");
+            return;
+
+        }
+
+        setError("");
+
+        if(type==="edit"){
+            updateTravelStory();
+        }else{
+            addNewTravelStory();
+        }
+    };
+
     const handleDeleteStoryImg=async()=>{};
 
 
@@ -29,7 +88,7 @@ const AddEditTravelStory = ({
     <div>
         <div className='flex items-center justify-between'>
             <h5 className='text-xl font-medium text-slate-700'>{type==="add"? "Add Story":"Update Story"}</h5>
-
+           <div>
             <div className='flex items-center gap-3 bg-cyan-50/50 p-2 rounded-l-lg'>
                {type==="add"? <button className='btn-small' onClick={HandleAddOrUpdateClick}>
                     <MdAdd className="text-lg" /> ADD STORY 
@@ -45,6 +104,11 @@ const AddEditTravelStory = ({
                     <MdClose className="text-lg" />
                 </button>
             </div>
+
+            {error && (
+                <p className='text-red-500 text-xs pt-2 text-right'>{error}</p>
+            )}
+        </div>
         </div>
 
         <div>

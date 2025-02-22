@@ -22,31 +22,33 @@ const ImageSelector = ({image, setImage, handleDeleteImage}) => {
 
     }
 
-    useEffect(()=>{
-        if(typeof image==="string"){
-            setPreviewUrl(image);
-        }
-        else if(image){
-            setPreviewUrl(URL.createObjectURL(image))
-
-        }
-        else{
+   
+    useEffect(() => {
+        console.log("Image from DB:", image);
+    
+        if (!image) {
             setPreviewUrl(null);
+            return;
         }
-        return ()=>{
-            if(previewUrl && typeof previewUrl ==="string" && !image){
-                URL.revokeObjectURL(previewUrl);
-            }
-
+    
+        if (typeof image === "string") {
+            setPreviewUrl(image); // Direct URL
+        } else if (image instanceof File || image instanceof Blob) {
+            const objectUrl = URL.createObjectURL(image);
+            setPreviewUrl(objectUrl);
+            
+            return () => {
+                URL.revokeObjectURL(objectUrl); // Cleanup
+            };
         }
-
-    },[image]);
+    }, [image]);
+    
   return (
     <div> 
         <input type='file' accept="image/*" ref={inputRef} onChange={handleImageChange} className='hidden' />
         {!image ? <button className='w-full h-[220px] flex flex-col items-center justify-center gap-4 bg-slate-200/50' onClick={()=>onChooseFile()}>
             <div className='w-14 h-14 flex items-center justify-center bg-cyan-50 rounded-full border-cyan-100'><FaRegFileImage className='text-xl text-cyan-500' /></div>
-            <p className='text-sm text-slate-500'>Browse image file to uplaod</p>
+            <p className='text-sm text-slate-500'>Browse image file to upload</p>
         </button> :
         <div className='w-full relative'>
             <img src={previewUrl}
