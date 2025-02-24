@@ -32,9 +32,14 @@ app.use(express.json());
 
 app.use(cors({origin:"*",
     methods: "GET,POST,PUT,DELETE",
-    allowedHeaders: "Content-Type,Authorization"
+    allowedHeaders: ["Content-Type,Authorization"]
 }));
 
+//Serve static files form the uploads  and assets directory
+app.use("uploads", express.static(path.join(__dirname,"uploads")));
+app.use('/uploads', express.static('uploads'));
+
+app.use("assets", express.static(path.join(__dirname,"assets")));
 
 app.get("/",(req,res)=>{
    res.send("hello")
@@ -167,9 +172,7 @@ app.delete("/delete-image", async(req,res)=>{
 })
 
 
-//Serve static files form the uploads  and assets directory
-app.post("uploads", express.static(path.join(__dirname,"uploads")));
-app.post("assets", express.static(path.join(__dirname,"assets")))
+
 
 // Add  Travel Story
 app.post("/add-travel-story", authenticateToken, async(req,res)=>{
@@ -218,7 +221,7 @@ app.put("/edit-story/:id", authenticateToken, async(req,res)=>{
     const {title, story, visitedLocation,imageUrl,visitedDate}=req.body;
     const {userId}=req.user;
 
-    if(!title || !story || !visitedLocation || !imageUrl || !visitedDate){
+    if(!title || !story || !visitedLocation || !visitedDate){
         return res.status(404).json({error:true,message:"All fields are required."})
     }
     const paresedVisitedDate=new Date(parseInt(visitedDate));
@@ -230,7 +233,7 @@ app.put("/edit-story/:id", authenticateToken, async(req,res)=>{
             return res.status(404).json({error:true, message:"Travel Story not found"});
         }
 
-        const placeholderImgUrl=`http://localhost:8000/assets/placeholder.png`;
+        const placeholderImgUrl=`http://localhost:8000/assets/placeholder.jpg`;
 
         travelStory.title=title;
         travelStory.story=story;
@@ -250,7 +253,7 @@ app.put("/edit-story/:id", authenticateToken, async(req,res)=>{
 });
 
 //Delete Travel Story
-app.put("/delete-story/:id", authenticateToken, async(req,res)=>{
+app.delete("/delete-story/:id", authenticateToken, async(req,res)=>{
     const {id}=req.params;
     const  {userId}=req.user;
    try{
@@ -334,25 +337,31 @@ app.get("/search", authenticateToken, async(req,res)=>{
 });
 
 //filter travel story
-app.get("/travel-stories/filter", authenticateToken, async(req,res)=>{
-    const {startDate, endDate}=req.query;
-    const {userId}=req.user;
-     
-
-    try{
-        const start= new Date(parseInt(startDate));
-        const end =new Date(parseInt(endDate));
-        const filterStories =await TravelStory.find({
-            userId:userId,
-            visitedDate:{$gte:start,$lte:end},
-
-        }).sort({isFavourite:-1});
-        res.status(200),json({stories:filterStories});
-    }catch(error){
-        res.status(500).json({error:true,message:error.message});
+app.get("/travel-stories/filter", authenticateToken, async (req, res) => {
+    const { startDate, endDate } = req.query;
+    const { userId } = req.user;
+  
+    try {
+      console.log("Received Start Date:", startDate);
+      console.log("Received End Date:", endDate);
+  
+      const start = new Date(startDate); // ✅ Correct
+      const end = new Date(endDate); // ✅ Correct
+  
+      console.log("Parsed Start Date:", start);
+      console.log("Parsed End Date:", end);
+  
+      const filterStories = await TravelStory.find({
+        userId: userId,
+        visitedDate: { $gte: start, $lte: end },
+      }).sort({ isFavourite: -1 });
+  
+      res.status(200).json({ stories: filterStories });
+    } catch (error) {
+      res.status(500).json({ error: true, message: error.message });
     }
-
-});
+  });
+  
 
 
 

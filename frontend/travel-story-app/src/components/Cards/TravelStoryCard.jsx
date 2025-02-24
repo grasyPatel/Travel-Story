@@ -6,8 +6,11 @@ import  {GrMapLocation} from "react-icons/gr"
 const TravelStoryCard = ({
     imgUrl, title, date, story, visitedLocation, isFavourite, onfavouriteClick,
     onClick, 
+    
 }) => {
+  console.log("Image:",imgUrl);
   return (
+    
     <div className='border rounded-lg overflow-hidden bg-white hover:shadow-lg hover:shadow-slate-200 transition-all ease-in-out relative cursor-pointer'>
         <img src={imgUrl} alt={title} className='w-full h-56 object-cover rounded-lg'
         onClick={onClick}
