@@ -9,7 +9,7 @@ import EmptyCard from "../../components/Cards/EmptyCard";
 import TravelStoryCard from "../../components/Cards/TravelStoryCard";
 import AddEditTravelStory from "../Home/AddEditTravelStory";
 import ViewTravelStory from "./ViewTravelStory";
-import FilterInfoTitle from "../../components/Cards/filterInfoTitle";
+import FilterInfoTitle from "../../components/Cards/FilterInfoTitle";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
