@@ -342,14 +342,12 @@ app.get("/travel-stories/filter", authenticateToken, async (req, res) => {
     const { userId } = req.user;
   
     try {
-      console.log("Received Start Date:", startDate);
-      console.log("Received End Date:", endDate);
+     
   
-      const start = new Date(startDate); // ✅ Correct
-      const end = new Date(endDate); // ✅ Correct
+     const start = new Date(parseInt(startDate)); // ✅ Correct
+     const end = new Date(parseInt(endDate)); // ✅ Correct
   
-      console.log("Parsed Start Date:", start);
-      console.log("Parsed End Date:", end);
+      
   
       const filterStories = await TravelStory.find({
         userId: userId,
@@ -362,7 +360,6 @@ app.get("/travel-stories/filter", authenticateToken, async (req, res) => {
     }
   });
   
-
 
 
 

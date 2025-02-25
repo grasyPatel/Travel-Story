@@ -1,3 +1,8 @@
+import Date_Not_Match from "../assets/images/Date_Not_Match.png";
+import Create_Story from "../assets/images/Create_Story.png";
+import Search_not_found from "../assets/images/Search_not_found.png";
+
+
 export const validateEmail =(email)=>{
     const regex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -12,4 +17,30 @@ export const getInitials =(name)=>{
         initials+=words[i][0];
     }
     return initials.toUpperCase();
+}
+
+
+export const getEmptyCardMessage=(filterType)=>{
+    switch (filterType){
+        case "search":
+           return `OOPS! No stories found matching your search.`;
+        case "date" :
+            return `OOPS! No stories found in the given date range.`;
+        default:
+            return `start creating your first Travel Story! Click the 'Add' button to jot down
+                your thoughts, ideas, and memories. Let's get started!`;      
+           
+    }
+}
+
+
+export const getEmptyCardImage=(filterType)=>{
+    switch (filterType){
+        case "search":
+            return Search_not_found ;
+        case "date":
+            return Date_Not_Match;
+        default:
+            return Create_Story;        
+    }
 }
