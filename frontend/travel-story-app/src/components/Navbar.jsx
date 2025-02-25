@@ -1,5 +1,5 @@
 import React from 'react'
-import LOGO from "../assets/images/Logo.png";
+import LOGO from "/src/assets/images/Logo.png";
 import ProfileInfo from './Cards/ProfileInfo';
 import SearchBar from './Input/SearchBar';
 import {useNavigate} from "react-router-dom";
