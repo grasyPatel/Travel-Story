@@ -30,7 +30,8 @@ const ImageSelector = ({ image, setImage, handleDeleteImage }) => {
     }
 
     if (typeof image === "string") {
-      setPreviewUrl(image);
+      //change the serPreviewUrl(image);
+      setPreviewUrl(image.startsWith("http") ? image : `https://travel-story-w1jg.onrender.com${image}`);
     } else if (image instanceof File || image instanceof Blob) {
       const objectUrl = URL.createObjectURL(image);
       setPreviewUrl(objectUrl);
