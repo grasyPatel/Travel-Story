@@ -36,16 +36,16 @@ app.use(cors({
     allowedHeaders: "Content-Type,Authorization",
   }));
 
-app.use(cors({origin:"*",
-    methods: "GET,POST,PUT,DELETE",
-    allowedHeaders: ["Content-Type,Authorization"]
-}));
+// app.use(cors({origin:"*",
+//     methods: "GET,POST,PUT,DELETE",
+//     allowedHeaders: ["Content-Type,Authorization"]
+// }));
 
 //Serve static files form the uploads  and assets directory
-app.use("uploads", express.static(path.join(__dirname,"uploads")));
+app.use("/uploads", express.static(path.join(__dirname,"uploads")));
 app.use('/uploads', express.static('uploads'));
 
-app.use("assets", express.static(path.join(__dirname,"assets")));
+app.use("/assets", express.static(path.join(__dirname,"assets")));
 
 app.get("/",(req,res)=>{
    res.send("hello")
@@ -240,7 +240,8 @@ app.put("/edit-story/:id", authenticateToken, async(req,res)=>{
             return res.status(404).json({error:true, message:"Travel Story not found"});
         }
 
-        const placeholderImgUrl=`http://localhost:8000/assets/placeholder.jpg`;
+        const placeholderImgUrl = `${req.protocol}://${req.get('host')}/assets/placeholder.jpg`;
+
 
         travelStory.title=title;
         travelStory.story=story;
